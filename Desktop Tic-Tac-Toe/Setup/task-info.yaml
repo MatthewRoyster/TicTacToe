@@ -1,0 +1,14 @@
+type: edu
+files:
+  - name: src/tictactoe/ApplicationRunner.java
+    visible: true
+    learner_created: false
+  - name: src/tictactoe/TicTacToe.java
+    visible: true
+    learner_created: false
+  - name: test/TicTacToeTest.java
+    visible: false
+    learner_created: false
+feedback_link: https://hyperskill.org/projects/174/stages/897/implement#comment
+status: Solved
+record: 4
