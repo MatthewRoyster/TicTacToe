@@ -1,0 +1,26 @@
+type: edu
+custom_name: Can I have the Menu?
+files:
+  - name: src/tictactoe/ApplicationRunner.java
+    visible: true
+    learner_created: false
+  - name: src/tictactoe/TicTacToe.java
+    visible: true
+    learner_created: false
+  - name: test/TicTacToeTest.java
+    visible: false
+    learner_created: false
+  - name: src/tictactoe/TicTacComp.java
+    visible: true
+    learner_created: true
+feedback_link: https://hyperskill.org/projects/174/stages/900/implement#comment
+status: Failed
+feedback:
+  message: |-
+    Wrong answer in test #77
+
+    Component &quot;ButtonB3&quot; should be enabled
+
+    After selecting &#39;Human vs Robot&#39;, the game should start. The first player button should be set to &#39;Robot&#39; and disabled. The second player button should be set to &#39;Human&#39; and disabled. The Start/Reset button should be set to &#39;Reset&#39; and the cells should be enabled.
+  time: "Sun, 06 Jul 2025 21:35:41 UTC"
+record: -1

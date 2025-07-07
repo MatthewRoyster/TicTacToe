@@ -1,10 +1,13 @@
+
 package tictactoe;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class TicTacComp {
+public class TicTacComp{
 
     private String move;
 
@@ -12,12 +15,15 @@ public class TicTacComp {
 
     private Random rand = new Random();
 
-    public TicTacComp(String playerMove, ArrayList<JButton> board){
+    private AtomicInteger myMove;
+
+    public TicTacComp(String playerMove, ArrayList<JButton> board, AtomicInteger AIMove){
         this.move = playerMove;
         this.boardButtons = board;
+        this.myMove = AIMove;
     }
 
-    public int makeNextMove(){
+    public void makeNextMove(){
 
         boolean freeMove = checkFreeMoves();
         int nextMove = rand.nextInt(9);
@@ -26,7 +32,7 @@ public class TicTacComp {
             nextMove = rand.nextInt(9);
         }
         //System.out.println("The move to be made is " + nextMove + " it current has " + boardButtons.get(nextMove).getText());
-        return nextMove;
+        this.myMove.set(nextMove);
     }
 
     private boolean checkFreeMoves(){
@@ -50,7 +56,7 @@ public class TicTacComp {
         this.boardButtons = board;
     }
 
-    public ArrayList<JButton> getGameBoard(){
+    public ArrayList<JButton> getGameBoard() {
         return this.boardButtons;
     }
 }

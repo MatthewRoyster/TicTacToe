@@ -1,10 +1,14 @@
+
 package tictactoe;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TicTacToe extends JFrame {
     private static String currentMove = "X";
@@ -27,6 +31,10 @@ public class TicTacToe extends JFrame {
 
     private static boolean p2Comp = false;
 
+    private static AtomicInteger p1Move = new AtomicInteger();
+
+    private static AtomicInteger p2Move = new AtomicInteger();
+
     private static JButton reset;
 
     private static JButton buttonPlayer1;
@@ -38,7 +46,6 @@ public class TicTacToe extends JFrame {
         setTitle("Tic Tac Toe");
         setResizable(false);
         setSize(550, 550);
-        setVisible(true);
 
         buttonPlayer1 = new JButton("Human");
         buttonPlayer1.setName("ButtonPlayer1");
@@ -70,7 +77,9 @@ public class TicTacToe extends JFrame {
             if(reset.getText().equals("Start")){
                 setFieldState(true);
                 reset.setText("Reset");
-                status.setText("Game in progress");
+                String message = "The turn of {0} Player ({1})";
+                String player = getCurrentPlayer();
+                status.setText(MessageFormat.format(message, player, currentMove));
                 buttonPlayer1.setEnabled(false);
                 buttonPlayer2.setEnabled(false);
                 if(p1Comp){
@@ -122,8 +131,9 @@ public class TicTacToe extends JFrame {
             b.setEnabled(false);
         }
 
-        p1 = new TicTacComp("X", buttons);
-        p2 = new TicTacComp("O", buttons);
+        p1 = new TicTacComp("X", buttons, p1Move);
+
+        p2 = new TicTacComp("O", buttons, p2Move);
 
         /*
         Create the status label and reset button, these get added to the
@@ -168,6 +178,8 @@ public class TicTacToe extends JFrame {
         add(board);
 
         Arrays.fill(boardMarks, " ");
+
+        setVisible(true);
 
     }
 
@@ -243,7 +255,7 @@ public class TicTacToe extends JFrame {
                 int locationIndex = (Character.getNumericValue(temp.getName().charAt(6)) - 10);
                 locationIndex += (Integer.parseInt(temp.getName().charAt(7) + "") - 1) * 3;
                 if (boardMarks[locationIndex].equals(" ") && !gameOver) {
-                    status.setText("Game in progress");
+
                     temp.setText(currentMove);
                     temp.setEnabled(false);
                     boardMarks[locationIndex] = currentMove;
@@ -251,17 +263,24 @@ public class TicTacToe extends JFrame {
                     //System.out.println(currentMove + " just played, placed at " + locationIndex);
 
                     //Change the move to the opponent
-                    if (currentMove.equals("X")) {
-                        currentMove = "O";
-                    } else {
-                        currentMove = "X";
-                    }
-                    if (currentMove.equals("O") && p2Comp) {
-                        int compMove = p2.makeNextMove();
-                        buttons.get(compMove).doClick();
-                    } else if (currentMove.equals("X") && p1Comp) {
-                        int compMove = p1.makeNextMove();
-                        buttons.get(compMove).doClick();
+                    if(!gameOver && counter < 9) {
+                        if (currentMove.equals("X")) {
+                            currentMove = "O";
+                        } else {
+                            currentMove = "X";
+                        }
+                        String player = getCurrentPlayer();
+                        String message = "The turn of {0} Player ({1})";
+                        status.setText(MessageFormat.format(message, player, currentMove));
+
+                        if (currentMove.equals("O") && p2Comp) {
+                            p2.makeNextMove();
+                            buttons.get(p2Move.get()).doClick();
+                        } else if (currentMove.equals("X") && p1Comp) {
+                            p1.makeNextMove();
+                            buttons.get(p1Move.get()).doClick();
+                        }
+
                     }
                 }
             });
@@ -319,12 +338,15 @@ public class TicTacToe extends JFrame {
         printGameBoard();
 
         if(isWinner){
-            status.setText(currentMove + " wins");
+            String player = getCurrentPlayer();
+            String message = "The {0} Player ({1}) wins";
+            status.setText(MessageFormat.format(message,player ,currentMove));
             System.out.println(currentMove + " wins");
             gameOver = true;
             setFieldState(false);
         }else if(counter == 9){
             status.setText("Draw");
+            gameOver = true;
         }
     }
 
@@ -337,5 +359,22 @@ public class TicTacToe extends JFrame {
         System.out.println(labels);
     }
 
+    private static String getCurrentPlayer(){
+        String winningPlayer = "";
+        if(currentMove.equals("X")){
+            if(p1Comp){
+                winningPlayer = "Robot";
+            }else{
+                winningPlayer = "Human";
+            }
+        }else{
+            if(p2Comp){
+                winningPlayer = "Robot";
+            }else{
+                winningPlayer = "Human";
+            }
+        }
+        return winningPlayer;
+    }
 
 }
